@@ -19,9 +19,21 @@ stream
     transform(chunk, enc, cb) {
       const item = JSON.parse(chunk)
       const myNumber = /\d+/.exec(item.name)[0]
-      console.log(myNumber)
+      let name = item.name
 
-      cb()
+      if(myNumber % 2 === 0) name = name.concat(' É par')
+      else name = name.concat(' É impar')
+      item.name = name
+
+      cb(null, JSON.stringify(item))
     }
  })
 )
+ .pipe(
+  new Writable({
+    write(chunk, enc, cb) {
+      console.log('Já chegou o disco voaadorr', chunk.toString())
+      cb()
+    }
+  })
+ )
